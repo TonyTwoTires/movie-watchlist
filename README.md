@@ -3,7 +3,7 @@
 A small web app where each person registers, logs in, and keeps a private list of movies they want to watch or have already watched. Built for the Engineering Design 2 "Build Software with Practice" assignment at Florida Atlantic University.
 
 - **Live app:** https://my-movie-watchlist-tracker.netlify.app
-- **Demo video (unlisted YouTube, 3-5 minutes):** _link will be added here_
+- **Demo video (unlisted on YouTube):** https://youtu.be/SLHnzQEVryM
 
 ## What the app does
 
