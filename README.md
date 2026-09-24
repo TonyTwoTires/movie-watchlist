@@ -9,8 +9,8 @@ A small web app where each person registers, logs in, and keeps a private list o
 
 - **Register, log in, and log out** with an email and password.
 - **Add a movie** with a title, release year, genre, and notes.
-- **Mark a movie as watched** and give it a rating from 1 to 5 stars, or move it back to the watchlist.
-- **Edit** a movie's details (and the rating of a watched movie).
+- **Mark a movie as watched**, give it a rating from 1 to 5 stars, and record the date you watched it, or move it back to the watchlist.
+- **Edit** a movie's details (and the rating and watched date of a watched movie).
 - **Delete** a movie.
 - **Filter** the list by All, To watch, or Watched.
 - **Private data:** each user only ever sees their own movies. This is enforced in the database itself (see Row Level Security below), not just in the screens.
@@ -42,7 +42,7 @@ Browser (React app)  <->  Supabase (login + PostgreSQL database)
 
 ### Database
 
-One table, `movies`, with these columns: `id`, `user_id` (the owner), `title`, `year`, `genre`, `notes`, `status` (`to_watch` or `watched`), `rating` (1 to 5), and `created_at`.
+One table, `movies`, with these columns: `id`, `user_id` (the owner), `title`, `year`, `genre`, `notes`, `status` (`to_watch` or `watched`), `rating` (1 to 5), `watched_on` (the date it was watched), and `created_at`.
 
 **Row Level Security** is turned on, with policies so a logged-in user can only view, add, update, and delete rows where `user_id` matches their own account.
 
@@ -86,4 +86,5 @@ The app is deployed on Netlify from the `main` branch, with build command `npm r
 ## Reflection: tradeoffs and future improvements
 
 - Supabase was chosen so authentication and the database come from one free service, which kept the project small.
-- Possible improvements: a "watched on" date, searching movies from an outside movie database, posters, and sharing lists between users.
+- The "watched on" date was added after the first version, as a new column on the existing table, which is how a real database changes over time.
+- Possible improvements: searching movies from an outside movie database, posters, and sharing lists between users.
