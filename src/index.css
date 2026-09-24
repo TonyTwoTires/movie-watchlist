@@ -280,3 +280,18 @@ button.filter.active {
 .empty {
   color: #94a3b8;
 }
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  cursor: pointer;
+}
+
+.checkbox-row input {
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+}

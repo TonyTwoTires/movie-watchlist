@@ -1,6 +1,13 @@
 import { useState } from 'react';
 
-const EMPTY = { title: '', year: '', genre: '', notes: '' };
+// Today's date as YYYY-MM-DD in the user's own timezone (what a date input expects).
+function todayLocal() {
+  return new Date().toLocaleDateString('en-CA');
+}
+
+function emptyValues() {
+  return { title: '', year: '', genre: '', notes: '', rating: 5, watchedOn: todayLocal() };
+}
 
 // Used for both adding a new movie and editing an existing one.
 export default function MovieForm({ initial, submitLabel, onSubmit, onCancel }) {
@@ -14,10 +21,12 @@ export default function MovieForm({ initial, submitLabel, onSubmit, onCancel }) 
           rating: initial.rating ?? 5,
           watchedOn: initial.watched_on ?? '',
         }
-      : EMPTY,
+      : emptyValues(),
   );
-  // Only movies that are already watched have a rating to edit.
-  const canEditRating = initial?.status === 'watched';
+  // When adding, the user can say they have already watched the movie.
+  const [alreadyWatched, setAlreadyWatched] = useState(false);
+  // Rating and date apply to movies that are watched (when editing) or marked as watched (when adding).
+  const showWatchedFields = initial ? initial.status === 'watched' : alreadyWatched;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -35,16 +44,18 @@ export default function MovieForm({ initial, submitLabel, onSubmit, onCancel }) 
       genre: values.genre.trim() || null,
       notes: values.notes.trim() || null,
     };
-    if (canEditRating) {
+    if (showWatchedFields) {
       changes.rating = Number(values.rating);
       changes.watched_on = values.watchedOn || null;
+      if (!initial) changes.status = 'watched';
     }
     const problem = await onSubmit(changes);
     setSaving(false);
     if (problem) {
       setError(problem);
     } else if (!initial) {
-      setValues(EMPTY);
+      setValues(emptyValues());
+      setAlreadyWatched(false);
     }
   }
 
@@ -73,7 +84,19 @@ export default function MovieForm({ initial, submitLabel, onSubmit, onCancel }) 
         <input id="genre" value={values.genre} onChange={update('genre')} placeholder="Sci-fi, comedy..." />
       </div>
 
-      {canEditRating && (
+      {!initial && (
+        <label className="checkbox-row" htmlFor="alreadyWatched">
+          <input
+            id="alreadyWatched"
+            type="checkbox"
+            checked={alreadyWatched}
+            onChange={(e) => setAlreadyWatched(e.target.checked)}
+          />
+          I've already watched this
+        </label>
+      )}
+
+      {showWatchedFields && (
         <div className="form-row">
           <div className="field small">
             <label htmlFor="rating">Rating</label>
