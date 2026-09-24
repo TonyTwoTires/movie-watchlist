@@ -8,7 +8,7 @@ A small web app where each person registers, logs in, and keeps a private list o
 ## What the app does
 
 - **Register, log in, and log out** with an email and password.
-- **Add a movie** with a title, release year, genre, and notes.
+- **Add a movie** with a title, release year, genre, and notes, either to the "To watch" list or, by checking "I've already watched this", straight to Watched with a rating and date.
 - **Mark a movie as watched**, give it a rating from 1 to 5 stars, and record the date you watched it, or move it back to the watchlist.
 - **Edit** a movie's details (and the rating and watched date of a watched movie).
 - **Delete** a movie.
