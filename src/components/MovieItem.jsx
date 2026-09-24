@@ -10,9 +10,25 @@ function Stars({ rating }) {
   );
 }
 
+// Today's date as YYYY-MM-DD in the user's own timezone (what a date input expects).
+function todayLocal() {
+  return new Date().toLocaleDateString('en-CA');
+}
+
+// Show a YYYY-MM-DD string as a readable date without timezone shifting.
+function formatDate(value) {
+  const [year, month, day] = value.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
 export default function MovieItem({ movie, onUpdate, onDelete }) {
   const [editing, setEditing] = useState(false);
   const [rating, setRating] = useState(movie.rating ?? 5);
+  const [watchedOn, setWatchedOn] = useState(todayLocal());
   const [markingWatched, setMarkingWatched] = useState(false);
 
   const watched = movie.status === 'watched';
@@ -24,12 +40,16 @@ export default function MovieItem({ movie, onUpdate, onDelete }) {
   }
 
   async function markWatched() {
-    await onUpdate(movie.id, { status: 'watched', rating: Number(rating) });
+    await onUpdate(movie.id, {
+      status: 'watched',
+      rating: Number(rating),
+      watched_on: watchedOn || null,
+    });
     setMarkingWatched(false);
   }
 
   function moveBackToWatchlist() {
-    return onUpdate(movie.id, { status: 'to_watch', rating: null });
+    return onUpdate(movie.id, { status: 'to_watch', rating: null, watched_on: null });
   }
 
   if (editing) {
@@ -58,6 +78,7 @@ export default function MovieItem({ movie, onUpdate, onDelete }) {
           </span>
           {movie.genre && <span>{movie.genre}</span>}
           {watched && movie.rating && <Stars rating={movie.rating} />}
+          {watched && movie.watched_on && <span>Watched on {formatDate(movie.watched_on)}</span>}
         </p>
         {movie.notes && <p className="notes">{movie.notes}</p>}
       </div>
@@ -77,6 +98,13 @@ export default function MovieItem({ movie, onUpdate, onDelete }) {
                 </option>
               ))}
             </select>
+            <label htmlFor={`watched-on-${movie.id}`}>Watched on</label>
+            <input
+              id={`watched-on-${movie.id}`}
+              type="date"
+              value={watchedOn}
+              onChange={(e) => setWatchedOn(e.target.value)}
+            />
             <button type="button" onClick={markWatched}>Save</button>
             <button type="button" className="secondary" onClick={() => setMarkingWatched(false)}>
               Cancel

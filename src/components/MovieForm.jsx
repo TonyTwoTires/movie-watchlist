@@ -12,6 +12,7 @@ export default function MovieForm({ initial, submitLabel, onSubmit, onCancel }) 
           genre: initial.genre ?? '',
           notes: initial.notes ?? '',
           rating: initial.rating ?? 5,
+          watchedOn: initial.watched_on ?? '',
         }
       : EMPTY,
   );
@@ -34,7 +35,10 @@ export default function MovieForm({ initial, submitLabel, onSubmit, onCancel }) 
       genre: values.genre.trim() || null,
       notes: values.notes.trim() || null,
     };
-    if (canEditRating) changes.rating = Number(values.rating);
+    if (canEditRating) {
+      changes.rating = Number(values.rating);
+      changes.watched_on = values.watchedOn || null;
+    }
     const problem = await onSubmit(changes);
     setSaving(false);
     if (problem) {
@@ -70,15 +74,21 @@ export default function MovieForm({ initial, submitLabel, onSubmit, onCancel }) 
       </div>
 
       {canEditRating && (
-        <div className="field small">
-          <label htmlFor="rating">Rating</label>
-          <select id="rating" value={values.rating} onChange={update('rating')}>
-            {[5, 4, 3, 2, 1].map((n) => (
-              <option key={n} value={n}>
-                {n} star{n > 1 ? 's' : ''}
-              </option>
-            ))}
-          </select>
+        <div className="form-row">
+          <div className="field small">
+            <label htmlFor="rating">Rating</label>
+            <select id="rating" value={values.rating} onChange={update('rating')}>
+              {[5, 4, 3, 2, 1].map((n) => (
+                <option key={n} value={n}>
+                  {n} star{n > 1 ? 's' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="watchedOn">Watched on</label>
+            <input id="watchedOn" type="date" value={values.watchedOn} onChange={update('watchedOn')} />
+          </div>
         </div>
       )}
 

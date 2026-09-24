@@ -12,6 +12,10 @@ create table if not exists public.movies (
   created_at  timestamptz not null default now()
 );
 
+-- Added after the first version: the date a movie was watched.
+-- Safe to run on an existing table; it does nothing if the column is already there.
+alter table public.movies add column if not exists watched_on date;
+
 -- Row Level Security: every user can only see and change their own rows.
 alter table public.movies enable row level security;
 
