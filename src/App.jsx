@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase, isConfigured } from './supabaseClient.js';
 import AuthForm from './components/AuthForm.jsx';
+import MovieList from './components/MovieList.jsx';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -57,9 +58,7 @@ export default function App() {
       </header>
 
       {session ? (
-        <section className="card">
-          <p>You are logged in. Your movies will appear here.</p>
-        </section>
+        <MovieList />
       ) : (
         <AuthForm />
       )}
